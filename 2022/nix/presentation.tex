@@ -1,0 +1,79 @@
+\documentclass{beamer}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{nix}
+
+\usetheme{Warsaw}
+
+\title{Nix, Nixpkgs, \& Nixos}
+\author{Jared Baur}
+\date{2022-03-02}
+
+\begin{document}
+\lstset{language=Nix}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{What is it?}
+	Nix is a...
+	\begin{itemize}
+		\item language
+		\item package manager
+		\item package repository
+		\item configuration tool
+		\item operating system
+		\item mentality
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Package Manager}
+	The nix command
+\end{frame}
+
+\begin{frame}{Package Manager}{ephemeral environments}
+	\lstinline[language={}]!nix shell nixpkgs\#hello!
+	\\
+	\lstinline[language={}]!nix run nixpkgs\#hello!
+\end{frame}
+
+\begin{frame}[containsverbatim]{Package Manager}{build tool}
+	\begin{itemize}
+		\item The base unit in Nix is a derivation
+		\item A derivation can represent (almost) anything
+	\end{itemize}
+	\lstinputlisting{simple-derivation.nix}
+	% \begin{lstlisting}[language={}]
+	% $ readlink ./result
+	% /nix/store/fkl40q8pjwmr5k3mz8rxvs4qczmllw6v-simple-derivation
+	% \end{lstlisting}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Package Manager}{build tool}
+	\lstinputlisting{simple-derivation-modded.nix}
+	% \begin{lstlisting}[language={}]
+	% $ readlink ./result
+	% /nix/store/m8xqy90a7nm0kmx8sk8i10ndkcq5iqxl-simple-derivation
+	% \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Package Manager}{build tool}
+	\lstinputlisting{script.nix}
+\end{frame}
+
+\begin{frame}{Package Manager}{container images}
+	\lstinputlisting{container.nix}
+\end{frame}
+
+\begin{frame}{Package Repository}
+	\url{https://github.com/nixos/nixpkgs}
+\end{frame}
+
+\begin{frame}{Operating System}
+\end{frame}
+
+\begin{frame}{Operating System}{testing framework}
+\end{frame}
+
+\end{document}
