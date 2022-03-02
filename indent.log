@@ -1,0 +1,21 @@
+INFO:  latexindent version 3.9.2, 2021-04-06, a script to indent .tex files
+       latexindent lives here: /nix/store/yf1c64j59gp7ir20lavdczyl551wxgv5-perl5.34.0-latexindent-3.9.2/bin/
+       Wed Mar  2 09:46:17 2022
+       Reading input from STDIN
+INFO:  Processing switches:
+INFO:  Directory for backup files and indent.log: .
+INFO:  YAML settings read: defaultSettings.yaml
+        Reading defaultSettings.yaml from /nix/store/hhnvsaw0gn9jghg1ndqb3by6gjp4hz1f-texlive-latexindent-3.9.2/scripts/latexindent/defaultSettings.yaml
+INFO:  YAML settings read: indentconfig.yaml or .indentconfig.yaml
+       Home directory is /home/jared (didn't find either indentconfig.yaml or .indentconfig.yaml)
+       To specify user settings you would put indentconfig.yaml here: /home/jared/indentconfig.yaml
+       Alternatively, you can use the hidden file .indentconfig.yaml as: /home/jared/.indentconfig.yaml
+INFO:  Phase 1: searching for objects
+INFO:  Phase 2: finding surrounding indentation
+INFO:  Phase 3: indenting objects
+INFO:  Phase 4: final indentation check
+INFO:  Output routine:
+       Not outputting to file; see -w and -o switches for more options.
+       --------------
+INFO:  Please direct all communication/issues to:
+        https://github.com/cmhughes/latexindent.pl

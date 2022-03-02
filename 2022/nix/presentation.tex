@@ -5,12 +5,12 @@
 
 \usetheme{Warsaw}
 
-\title{Nix, Nixpkgs, \& Nixos}
+\title{Nix, Nixpkgs, \& NixOS}
 \author{Jared Baur}
 \date{2022-03-02}
 
 \begin{document}
-\lstset{language=Nix}
+\lstset{language=Nix,basicstyle=\small}
 
 \begin{frame}
 	\titlepage
@@ -28,52 +28,148 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Package Manager}
-	The nix command
+\begin{frame}{Package Manager}{ephemeral environments}
+	\begin{itemize}
+		\item \lstinline[language={}]!nix shell nixpkgs\#hello! drops you in an
+		      interactive shell with the \lstinline!hello! package from nixpkgs
+		      available
+		\item \lstinline[language={}]!nix run nixpkgs\#hello! runs the
+		      \lstinline!hello! package from nixpkgs and returns to your shell
+		\item \lstinline[language={}]!nix run github:jmbaur/gosee! runs a
+		      program I wrote that doesn't come from nixpkgs
+	\end{itemize}
 \end{frame}
 
-\begin{frame}{Package Manager}{ephemeral environments}
-	\lstinline[language={}]!nix shell nixpkgs\#hello!
-	\\
-	\lstinline[language={}]!nix run nixpkgs\#hello!
+\begin{frame}{Package Manager}{build tool}
+	\begin{itemize}
+		\item The base unit in Nix is a derivation
+		\item A derivation can represent (almost) anything
+		\item Changing a derivations inputs changes the hashed output
+	\end{itemize}
+	\lstinputlisting{simple-derivation.nix}
 \end{frame}
 
 \begin{frame}[containsverbatim]{Package Manager}{build tool}
 	\begin{itemize}
-		\item The base unit in Nix is a derivation
-		\item A derivation can represent (almost) anything
+		\item Changing a derivations inputs changes the hashed output
+		\item Derivations can be addressed by their content
+		\item Dependency management is no longer a problem
 	\end{itemize}
-	\lstinputlisting{simple-derivation.nix}
-	% \begin{lstlisting}[language={}]
-	% $ readlink ./result
-	% /nix/store/fkl40q8pjwmr5k3mz8rxvs4qczmllw6v-simple-derivation
-	% \end{lstlisting}
-\end{frame}
-
-\begin{frame}[containsverbatim]{Package Manager}{build tool}
-	\lstinputlisting{simple-derivation-modded.nix}
-	% \begin{lstlisting}[language={}]
-	% $ readlink ./result
-	% /nix/store/m8xqy90a7nm0kmx8sk8i10ndkcq5iqxl-simple-derivation
-	% \end{lstlisting}
+	\begin{lstlisting}[language={}]
+	$ ls /nix/store
+	fkl40q8pjwmr5k3mz8rxvs4qczmllw6v-simple-derivation
+	jpb61i1bxkfnl2ah72m8x77cjrgzksvp-simple-derivation
+	...
+	\end{lstlisting}
 \end{frame}
 
 \begin{frame}{Package Manager}{build tool}
+	\begin{itemize}
+		\item Many derivation helpers exist to enhance the build process
+		      \begin{itemize}
+			      \item Go: \lstinline{buildGoModule}
+			      \item Python: \lstinline{buildPythonApplication}
+			      \item Javascript: \lstinline{mkYarnPackage}
+		      \end{itemize}
+		\item Some even come with built-in linting (shellcheck will cause the
+		      derivation below to fail)
+	\end{itemize}
 	\lstinputlisting{script.nix}
 \end{frame}
 
+\begin{frame}{development environments}
+	Getting setup with a project's development environment is as easy as
+	running \lstinline!nix develop!
+	\lstinputlisting{dev-env.nix}
+\end{frame}
+
 \begin{frame}{Package Manager}{container images}
-	\lstinputlisting{container.nix}
+	\begin{itemize}
+		\item Image sizes are small by default (similar to \lstinline{FROM scratch})
+		\item Derivations are layered together to create an image
+		\item Layers are a tree of dependencies (like all other Nix software),
+		      so layer caching is smarter than Dockerfile's linear layer
+		      dependency.
+	\end{itemize}
+	\lstinputlisting{container1.nix}
+\end{frame}
+
+\begin{frame}{Package Manager}{container images}
+	\lstinputlisting{container2.nix}
 \end{frame}
 
 \begin{frame}{Package Repository}
 	\url{https://github.com/nixos/nixpkgs}
+	\begin{itemize}
+		\item Over 65,000 packages
+		\item Package upgrades/fixes/etc are just GitHub PRs
+		\item Any repository conforming to the Nix flakes specification can be
+		      an arbitrary repository of packages or any kind of derivation
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Operating System}
+	\begin{itemize}
+		\item Declarative approach to systems
+		\item Module system gives flexibility and abstraction
+		\item Rolling back
+	\end{itemize}
+	\lstinputlisting{nixos-config.nix}
 \end{frame}
 
 \begin{frame}{Operating System}{testing framework}
+	\lstinputlisting{nixos-test.nix}
+\end{frame}
+
+\begin{frame}{Operating System}{testing framework}
+	Nix testing framework allows for integration testing entire systems
+	\begin{itemize}
+		\item Each node spins a separate qemu VM
+		\item A node's configuration is plain NixOS configuration
+		\item Tests are not limited to what you can do in a console, graphical
+		      applications, screenshotting, and grabbing on-screen text are all
+		      supported
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Other}
+	Nix can do many things, but its emphasis on reproducibility is what sets it
+	apart
+	\begin{itemize}
+		\item Builds are ran in a sandbox that do not have access to the
+		      network
+		\item Network access can be obtained if the checksums of inputs are
+		      known
+		\item Many of the build helpers for specific languages/frameworks will
+		      use locking mechanisms to aid in the fetching process
+		\item Other helpers exist for calculating checksums
+		      \begin{itemize}
+			      \item \lstinline{nix-prefetch-url}
+			      \item \lstinline{nix-prefetch-git}
+			      \item \lstinline{nix-prefetch-docker}
+		      \end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Other}
+	This will fail
+	\lstinputlisting{fetch.nix}
+\end{frame}
+
+\begin{frame}{Other}
+	This will succeed :)
+	\lstinputlisting{fetch-repro.nix}
+\end{frame}
+
+\begin{frame}{Links}
+	\begin{itemize}
+		\item NixOS manual (\url{https://nixos.org/manual})
+		\item NixOS packages \& modules (\url{https://search.nixos.org})
+		\item Shipit! Presents: How Shopify Uses Nix
+		      (\url{https://www.youtube.com/watch?v=KaIRpx11qrc})
+		\item NYLUG Presents: Sneaking in Nix - Building Production Containers
+		      with Nix (\url{https://www.youtube.com/watch?v=pfIDYQ36X0k})
+	\end{itemize}
 \end{frame}
 
 \end{document}
